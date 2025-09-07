@@ -18,8 +18,10 @@ CORS(app)
 
 UPLOAD_FOLDER = 'uploads'
 STATIC_FOLDER = 'static'
-if not os.path.exists(UPLOAD_FOLDER): os.makedirs(UPLOAD_FOLDER)
-if not os.path.exists(STATIC_FOLDER): os.makedirs(STATIC_FOLDER)
+# ## THIS IS THE FIX: Added exist_ok=True to prevent race conditions ##
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(STATIC_FOLDER, exist_ok=True)
+
 
 @app.route('/')
 def home():
@@ -74,7 +76,6 @@ def compare_all_genomes(file_paths, k=21):
     return df
 
 def generate_and_save_plots(df, threshold=80, output_folder='static'):
-    for f in os.listdir(output_folder): os.remove(os.path.join(output_folder, f))
     timestamp = int(time.time())
     links = {}
     df_vis = df.copy()
@@ -119,20 +120,31 @@ def analyze():
         threshold = int(request.form.get('threshold', 90))
         uploaded_files = request.files.getlist('all_files') if mode == 'All vs All' else request.files.getlist('query_files')
         reference_file = request.files.get('reference_file') if mode == 'Pairwise' else None
-        if not uploaded_files and not (mode == 'Pairwise' and reference_file):
-            return jsonify({'status': 'error', 'message': 'No files uploaded.'}), 400
-        for f in os.listdir(UPLOAD_FOLDER): os.remove(os.path.join(UPLOAD_FOLDER, f))
+        
+        # Clear the uploads folder before saving new files
+        for f in os.listdir(UPLOAD_FOLDER):
+            os.remove(os.path.join(UPLOAD_FOLDER, f))
+
         saved_paths = []
         for f in uploaded_files:
             path = os.path.join(UPLOAD_FOLDER, f.filename); f.save(path); saved_paths.append(path)
         reference_path = None
         if reference_file:
             reference_path = os.path.join(UPLOAD_FOLDER, reference_file.filename); reference_file.save(reference_path)
-        df = compare_all_genomes(saved_paths, k=kmer_size)
+        
+        df = compare_all_genomes(saved_paths, k=kmer_size) if mode == 'All vs All' else compare_reference_vs_all(reference_path, saved_paths, k=kmer_size)
+        
         if df.empty:
             return jsonify({'status': 'success', 'message': 'Analysis complete, but no data to display.'}), 200
+        
         plot_links = generate_and_save_plots(df, threshold=threshold)
         table_data = df.to_dict(orient='records')
         return jsonify({'status': 'success', 'message': 'Analysis complete.', 'table_data': table_data, 'download_links': plot_links})
     except Exception as e:
+        # For debugging, let's print the exception to the log
+        print(f"An error occurred during analysis: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# This part is removed for deployment as Gunicorn starts the app
+# if __name__ == '__main__':
+#     app.run(debug=True, port=5001)
