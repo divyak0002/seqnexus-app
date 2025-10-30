@@ -2,7 +2,7 @@
 
 💡 Project Overview: Bridging Genomics and Data Science
 
-SeqNexus is an interactive web tool built on Python and Flask for high-throughput, alignment-free comparison of genomic sequences. It utilises k-mer-based metrics to rapidly derive genetic similarity, providing a crucial exploratory data analysis (EDA) tool for fields like microbial genomics and epidemiology (e.g., analysing strains like M. tuberculosis).
+SeqNexus is an interactive web tool built on Python and Flask for high-throughput, alignment-free comparison of genomic sequences. It utilises k-mer-based metrics to rapidly derive genetic similarity, providing a crucial Exploratory Data Analysis (EDA) tool for fields like microbial genomics and epidemiology (e.g., analysing strains like M. tuberculosis).
 
 This tool is a demonstration of proficiency in:
 
@@ -56,11 +56,11 @@ User-Defined Parameters: Allows dynamic adjustment of k-mer size and the similar
 
 🖼️ Strategically Chosen Visualizations
 
-We provide two key images to showcase different strengths of the analytical engine. These images were generated using optimized genome snippets to balance performance with visual complexity.
+We provide two images to showcase different strengths. These images were generated using optimized genome snippets for speed and visual clarity.
 
 Asset 1: Scale and Robustness (100 Genomes)
 
-This Heatmap proves the tool can process and correctly map 100 simultaneous comparisons without visual confusion, demonstrating computational scale.
+This Heatmap proves the tool can process and correctly map 100 simultaneous comparisons, demonstrating computational scale.
 
 Image Asset
 
@@ -76,7 +76,7 @@ Scale and Computational Robustness
 
 Asset 2: Clustering and Clarity (5 Genomes)
 
-This Network Graph focuses on legibility, using fewer nodes to clearly illustrate the maximum Jaccard similarity threshold, revealing distinct clusters and making visual analysis possible.
+This Network Graph uses fewer nodes to clearly illustrate the maximum Jaccard similarity threshold, revealing distinct clusters and making visual analysis possible.
 
 Image Asset
 
@@ -138,13 +138,11 @@ cd seqnexus-app
 pip install -r requirements.txt
 
 
-
 2. Mode A: Interactive Web Demo (Small Data)
 
 Use this mode for testing and visualizing small datasets directly in your browser.
 
 python3 app.py
-
 
 
 Public Access: The live demo can be accessed here: https://seqnexus-app.onrender.com
@@ -153,9 +151,9 @@ Local Access (Developer only): Open your browser and navigate to http://127.0.0.
 
 Use Case: Interactive testing, quick comparisons ($\le 10$ files), and UI demonstration.
 
-3. Mode B: Command-Line Analysis (Large Datasets / HPC)
+3. Mode B: Production Scale Analysis (CLI)
 
-Use this mode for processing large genome cohorts (e.g., 400+ genomes). This mode bypasses the web interface and saves the results directly to the disk, which is more stable for heavy computation.
+Use this mode for processing large genome cohorts (e.g., 400+ genomes).
 
 # Command for 100-Genome Heatmap (Scale Proof)
 # NOTE: This uses the default threshold of 90% (or the default in app.py)
@@ -166,7 +164,6 @@ python3 app.py -d [path/to/100_genome_snippets]
 python3 app.py -d [path/to/5_genome_snippets] -t 95
 
 
-
 Argument
 
 Description
@@ -175,7 +172,7 @@ Default
 
 --directory / -d
 
-REQUIRED. Path to the folder containing all FASTA files (both reference and queries).
+REQUIRED. Path to the folder containing all FASTA files.
 
 N/A
 
@@ -186,8 +183,6 @@ Comparison mode: all-vs-all or pairwise (Reference-vs-All).
 all-vs-all
 
 --reference-file / -r
-
-
 
 $$Pairwise Mode Only$$
 
@@ -209,10 +204,8 @@ Minimum Max-Jaccard similarity (%) required to draw a link in the network graph.
 
 ⏱️ Execution Time Note
 
-Large-scale All-vs-All comparison is computationally intensive (complexity $\propto N^2$).
-
-Example Benchmark: Analyzing $\sim$400 genomes can take 30 to 60+ minutes on a standard desktop CPU, as it involves over 95,000 similarity calculations. The script is running normally if it produces no output for extended periods.
+Large-scale All-vs-All comparison is computationally intensive (complexity $\propto N^2$). The script is running normally if it produces no output for extended periods.
 
 ⚠️ Project Status & Scalability Note
 
-SeqNexus is maintained as a Proof-of-Concept with all its code available in the repository. The currently deployed web application is limited to small-to-medium datasets for demonstration purposes due to hosting memory constraints. The core Python architecture is designed for scalability and can be adapted for parallel processing and deployment on High-Performance Computing (HPC) environments to handle full-sized genomes
+SeqNexus is maintained as a Proof-of-Concept with all its code available in the repository. The currently deployed web application is limited to small-to-medium datasets for demonstration purposes due to hosting memory constraints. The core Python architecture is designed for scalability and can be adapted for parallel processing and deployment on High-Performance Computing (HPC) environments to handle full-sized genomes.
