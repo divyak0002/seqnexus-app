@@ -55,6 +55,8 @@ We provide two images to showcase different strengths. These images were generat
 
 This Heatmap proves the tool can process and correctly map 100 and even more simultaneous comparisons, demonstrating computational scale.
 
+![Similarity Heatmap for 100 Genomes](assets/heatmap_100.png)
+
 | Image Asset | Source Data | Proof |
 | :--- | :--- | :--- |
 | **Similarity Heatmap** | 100 Genomes (Snippets) | Scale and Computational Robustness |
@@ -62,6 +64,8 @@ This Heatmap proves the tool can process and correctly map 100 and even more sim
 * **Asset 2:** Clustering and Clarity (5 Genomes)
 
 This Network Graph uses fewer nodes to clearly illustrate the maximum Jaccard similarity threshold, revealing distinct clusters and making visual analysis possible.
+
+![Network Graph for 5 Genomes](assets/network_5.png)
 
 | Image Asset | Source Data | Proof |
 | :--- | :--- | :--- |
